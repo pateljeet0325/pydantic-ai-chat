@@ -17,6 +17,7 @@ class ChatSession(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255))
+    
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
