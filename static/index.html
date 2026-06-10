@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pydantic AI Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="sidebar">
+
+        <button id="new-chat-btn">
+            + New Chat
+        </button>
+
+        <div id="sessions">
+        </div>
+
+    </div>
+    <select id="model">
+
+        <option value="llama-3.3-70b-versatile">
+            Llama 3.3 70B
+        </option>
+
+        <option value="deepseek-r1-distill-llama-70b">
+            DeepSeek R1
+        </option>
+
+        <option value="gemma2-9b-it">
+             Gemma 2 9B
+        </option>
+
+    </select>
+
+    <div class="chat-area">
+
+        <div id="chat-box">
+        </div>
+
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="message"
+                placeholder="Type message..."
+            >
+
+            <button onclick="sendMessage()">
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
