@@ -414,3 +414,4 @@ Jeet Patel
 B.Tech Computer Science Engineering
 
 Built using PydanticAI, FastAPI, Groq, and PostgreSQL.
+url="http://127.0.0.1:8000/ui"

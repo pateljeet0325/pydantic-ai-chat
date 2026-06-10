@@ -26,9 +26,7 @@ load_dotenv()
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-agent = Agent(
-    "groq:llama-3.3-70b-versatile"
-)
+
 
 
 def build_history(messages):
