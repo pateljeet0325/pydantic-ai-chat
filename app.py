@@ -5,13 +5,8 @@ from fastapi.staticfiles import StaticFiles
 
 
 
-from pydantic_ai import Agent
-from pydantic_ai.messages import (
-    ModelRequest,
-    ModelResponse,
-    UserPromptPart,
-    TextPart,
-)
+from graph.agent_graph import chat_with_agent
+
 
 from database import SessionLocal
 from models import ChatSession, Message
@@ -27,36 +22,6 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-
-
-def build_history(messages):
-    history = []
-
-    for msg in messages:
-
-        if msg.role == "user":
-            history.append(
-                ModelRequest(
-                    parts=[
-                        UserPromptPart(
-                            content=msg.content
-                        )
-                    ]
-                )
-            )
-
-        elif msg.role == "assistant":
-            history.append(
-                ModelResponse(
-                    parts=[
-                        TextPart(
-                            content=msg.content
-                        )
-                    ]
-                )
-            )
-
-    return history
 
 
 @app.get("/")
@@ -104,23 +69,10 @@ def chat(session_id: int, request: ChatRequest):
             "error": "Session not found"
         }
 
-    previous_messages = (
-        db.query(Message)
-        .filter(Message.session_id == session_id)
-        .order_by(Message.id)
-        .all()
-    )
+    response_text = chat_with_agent(
+        request.message
+)   
 
-    history = build_history(previous_messages)
-
-    dynamic_agent = Agent(
-        f"groq:{request.model}"
-    )
-
-    result = dynamic_agent.run_sync(
-        request.message,
-        message_history=history
-    )
 
     user_message = Message(
         session_id=session_id,
@@ -131,7 +83,7 @@ def chat(session_id: int, request: ChatRequest):
     assistant_message = Message(
         session_id=session_id,
         role="assistant",
-        content=result.output
+        content=response_text
     )
 
     db.add(user_message)
@@ -141,8 +93,8 @@ def chat(session_id: int, request: ChatRequest):
     db.close()
 
     return {
-        "response": result.output
-    }
+        "response": response_text
+}
 
 @app.get("/sessions")
 def get_sessions():
@@ -262,3 +214,4 @@ def get_models():
             "name": "Gemma 2 9B"
         }
     ]
+
