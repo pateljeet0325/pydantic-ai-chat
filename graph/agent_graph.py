@@ -4,10 +4,13 @@ from langgraph.prebuilt import create_react_agent
 from tools.calculator import calculator
 
 from tools.database_tool import list_chat_sessions
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile"
+    model=os.getenv("GROQ_MODEL")
 )
 
 tools = [
